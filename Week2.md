@@ -257,8 +257,14 @@ pd.merge(df1, df2, how='inner', on='col1')  # 교집합만 (기본값)
 
 
 # 2️⃣ 수행 인증
-
-<!-- 교재에서 안내된 과정을 직접 실행해본 뒤, 진행 결과가 보이도록 4~6장의 스크린샷을 캡처하여 아래에 첨부해주세요.-->
+1. JSON 기본 실습
+![week2(1)](images/week2(1).png)
+2. JSON → 데이터프레임 변환
+![week2(2)](images/week2(2).png)
+3. XML 파싱 실습
+![week2(3)](images/week2(3).png)
+4. BeautifulSoup 기본 실습
+![week2(4)](images/week2(4).png)
 
 
 

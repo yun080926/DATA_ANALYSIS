@@ -39,7 +39,7 @@ https://www.youtube.com/watch?v=Il6L8OtNFpc&list=PLVsNizTWUw7FGzSRCkQrPEEe-ljVXg
 ## 01. API 사용하기
 
 ### API란?
-**API(Application Programming Interface)**란 두 프로그램이 서로 대화하기 위한 방법을 정의한 것이다. 데이터베이스에 직접 접근하기 어려울 때, 인증된 URL만 있으면 언제든지 필요한 데이터에 편리하게 접근할 수 있는 방식이다.
+API(Application Programming Interface)란 두 프로그램이 서로 대화하기 위한 방법을 정의한 것이다. 데이터베이스에 직접 접근하기 어려울 때, 인증된 URL만 있으면 언제든지 필요한 데이터에 편리하게 접근할 수 있는 방식이다.
 
 ### 웹 기반 API와 HTTP
 - **HTTP(Hyper Text Transfer Protocol)**: 인터넷에서 웹 페이지를 전송하는 기본 통신 방법

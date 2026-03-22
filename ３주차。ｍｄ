@@ -1,0 +1,251 @@
+# 데이터분석 3주차 정규과제
+
+📌데이터분석 정규과제는 매주 정해진 분량의 『*혼자 공부하는 데이터 분석 with 파이썬*』 을 읽고 학습하는 것입니다. 이번 주는 아래의 **DataAnalysis_3rd_TIL**에 나열된 분량을 읽고 공부하시면 됩니다.
+
+아래의 문제를 풀어보며 학습 내용을 점검하세요. 문제를 해결하는 과정에서 개념을 스스로 정리하고, 필요한 경우 제시된 강의를 참고하여 보완하는 것이 좋습니다.
+
+<!-- 강의 링크는 아래와 같습니다.
+https://www.youtube.com/watch?v=CE3_InvbmLY&list=PLVsNizTWUw7FGzSRCkQrPEEe-ljVXgS7k&index=6
+https://www.youtube.com/watch?v=hhbzUEQWdTg&list=PLVsNizTWUw7FGzSRCkQrPEEe-ljVXgS7k&index=7
+-->
+
+
+## DataAnalysis_3rd_TIL
+
+### 3장 데이터 정제하기
+#### 01. 불필요한 데이터 삭제하기
+#### 02. 잘못된 데이터 수정하기
+
+
+## Study Schedule
+
+| 주차  | 공부 범위     | 완료 여부 |
+| ----- | ------------- | --------- |
+| 1주차 | p.24~81    | ✅         |
+| 2주차 | p.84~151   | ✅         |
+| 3주차 | p.154~219  | ✅         |
+| 4주차 | p.222~279 | 🍽️         |
+| 5주차 | p.282~325 | 🍽️         |
+| 6주차 | p.328~379 | 🍽️         |
+| 7주차 | p.382~430 | 🍽️         |
+
+<br>
+
+<!-- 여기까진 그대로 둬 주세요-->
+
+
+# 1️⃣ 개념 정리 
+
+## 01. 불필요한 데이터 삭제하기
+
+### 📌 데이터 정제란?
+수집된 데이터에서 손상되거나 부정확한 부분을 수정하고, 불필요한 데이터를 삭제하거나 불완전한 값을 교체하는 작업을 **데이터 정제(data cleaning)**라고 한다. 이는 데이터를 분석 목적에 맞게 변환하는 **데이터 랭글링(data wrangling)** 또는 **데이터 먼징(data munging)**의 일부로 수행된다.
+
+---
+
+### 📌 열 삭제하기
+
+**방법 1. loc 메서드 + 슬라이싱**
+```python
+ns_book = ns_df.loc[:, '번호':'등록일자']  # 특정 범위 열 선택
+```
+
+**방법 2. loc 메서드 + 불리언 배열**
+```python
+selected_columns = ns_df.columns != 'Unnamed: 13'
+ns_book = ns_df.loc[:, selected_columns]
+```
+> 판다스의 Index 클래스를 어떤 값과 비교하면 원소 하나하나와 비교하여 True/False 배열을 반환하는데 이를 **원소별 비교(element-wise comparison)**라 한다.
+
+**방법 3. drop() 메서드**
+```python
+ns_book = ns_df.drop('Unnamed: 13', axis=1)          # 열 1개 삭제
+ns_book = ns_df.drop(['부가기호', 'Unnamed: 13'], axis=1)  # 열 여러 개 삭제
+ns_book.drop('주제분류번호', axis=1, inplace=True)    # 원본 직접 수정
+```
+> `axis=1`이면 열 삭제, `axis=0`(기본값)이면 행 삭제
+
+**방법 4. dropna() 메서드**
+```python
+ns_book = ns_df.dropna(axis=1)           # NaN이 하나라도 있는 열 삭제
+ns_book = ns_df.dropna(axis=1, how='all')  # 모든 값이 NaN인 열만 삭제
+```
+
+---
+
+### 📌 행 삭제하기
+
+**방법 1. drop() 메서드**
+```python
+ns_book2 = ns_book.drop([0, 1])  # 인덱스 0, 1 행 삭제
+```
+
+**방법 2. [] 연산자 + 슬라이싱**
+```python
+ns_book2 = ns_book[2:]    # 인덱스 2부터 끝까지
+ns_book2 = ns_book[0:2]   # 인덱스 0, 1만 선택 (2는 미포함)
+```
+> `loc` 메서드의 슬라이싱은 마지막 인덱스를 **포함**하지만, `[]` 연산자의 슬라이싱은 마지막 인덱스를 **포함하지 않는다.**
+
+**방법 3. [] 연산자 + 불리언 배열 (가장 자주 사용)**
+```python
+selected_rows = ns_df['출판사'] == '한빛미디어'
+ns_book2 = ns_book[selected_rows]
+
+# 조건을 직접 넣는 방식
+ns_book2 = ns_book[ns_book['대출건수'] > 1000]
+```
+
+---
+
+### 📌 중복된 행 찾기: duplicated()
+```python
+sum(ns_book.duplicated())  # 중복 행 개수 확인
+
+# 특정 열 기준으로 중복 탐색
+sum(ns_book.duplicated(subset=['도서명', '저자', 'ISBN']))
+
+# 중복된 모든 행을 True로 표시
+dup_rows = ns_book.duplicated(subset=['도서명', '저자', 'ISBN'], keep=False)
+```
+> 기본적으로 처음 등장한 행은 False, 이후 중복된 행은 True로 표시한다.  
+> `keep=False`로 지정하면 중복된 **모든** 행을 True로 표시한다.
+
+---
+
+### 📌 그룹별 모으기: groupby() + sum()
+같은 도서가 여러 권 등록된 경우 대출건수를 하나로 합산할 때 사용한다.
+```python
+loan_count = count_df.groupby(
+    by=['도서명', '저자', 'ISBN', '권'],
+    dropna=False
+).sum()
+```
+> `dropna=False`를 지정하면 NaN이 있는 행도 계산에 포함된다.
+
+---
+
+### 📌 원본 데이터 업데이트하기
+```python
+# ① 중복 제거 후 고유 행만 추출
+dup_rows = ns_book.duplicated(subset=['도서명', '저자', 'ISBN', '권'])
+unique_rows = ~dup_rows         # ~ 연산자로 불리언 배열 반전
+ns_book3 = ns_book[unique_rows].copy()
+
+# ② 인덱스 설정
+ns_book3.set_index(['도서명', '저자', 'ISBN', '권'], inplace=True)
+
+# ③ 대출건수 업데이트
+ns_book3.update(loan_count)
+
+# ④ 인덱스 해제
+ns_book4 = ns_book3.reset_index()
+
+# ⑤ 열 순서 원복
+ns_book4 = ns_book4[ns_book.columns]
+```
+
+---
+
+### 📌 핵심 함수 정리
+
+| 함수/메서드 | 기능 |
+|------------|------|
+| `drop()` | 행이나 열 삭제 |
+| `dropna()` | NaN 포함 행/열 삭제 |
+| `duplicated()` | 중복된 행 탐색 (불리언 배열 반환) |
+| `drop_duplicates()` | 중복된 행 삭제 |
+| `groupby()` | 특정 열 기준으로 행 그룹화 |
+| `sum()` | 합계 계산 |
+| `set_index()` | 열을 인덱스로 설정 |
+| `reset_index()` | 인덱스 재설정 |
+| `update()` | 다른 데이터프레임으로 값 업데이트 |
+| `equals()` | 두 데이터프레임이 동일한지 비교 |
+
+## 02. 잘못된 데이터 수정하기
+
+<!-- 새롭게 배운 내용을 자유롭게 정리해주세요.-->
+
+
+# 2️⃣ 수행 인증
+
+<!-- 교재에서 안내된 과정을 직접 실행해본 뒤, 진행 결과가 보이도록 4~6장의 스크린샷을 캡처하여 아래에 첨부해주세요.-->
+<!-- 이번 주차에는 API를 발급받는 과정도 포함하여 첨부해주세요.-->
+
+
+<br>
+<br>
+
+# 3️⃣ 확인 문제
+
+## 문제 1.
+
+> **🧚Q. 다음 두 데이터프레임 df1, df2를 합쳐서 데이터프레임 df3를 만들려고 합니다.**  
+> 적절한 판다스 명령을 선택해주세요.
+
+<table>
+<tr>
+
+<td>
+
+### df1
+
+| index | col1 | col2 |
+|-------|------|------|
+| 0     | x    | 5    |
+| 1     | y    | 6    |
+| 2     | z    | 7    |
+
+</td>
+
+<td>
+
+### df2
+
+| index | col3 | col4 |
+|-------|------|------|
+| 0     | x    | 50   |
+| 1     | y    | 60   |
+| 2     | w    | 70   |
+
+</td>
+
+<td align="center" valign="middle">
+
+<h2> ➜ </h2>
+
+</td>
+
+<td>
+
+### df3 (결과)
+
+| index | col1 | col2 | col3 | col4 |
+|-------|------|------|------|------|
+| 0     | x    | 5.0  | x    | 50.0 |
+| 1     | y    | 6.0  | y    | 60.0 |
+| 2     | z    | 7.0  | NaN  | NaN  |
+| 3     | NaN  | NaN  | w    | 70.0 |
+
+</td>
+
+</tr>
+</table>
+
+```
+1️⃣ pd.merge(df1, df2)
+2️⃣ pd.merge(df1, df2, how='left')
+3️⃣ pd.merge(df1, df2, left_on='col1', right_on='col3', how='outer')
+4️⃣ pd.merge(df1, df2, left_on='col1', right_on='col3', how='inner')
+```
+
+```
+③ pd.merge(df1, df2, left_on='col1', right_on='col3', how='outer')
+결과 df3를 보면 df1의 col1과 df2의 col3를 기준으로 병합하고 있으며, 두 데이터프레임 중 어느 한쪽에만 있는 값도 모두 포함되어 NaN으로 채워진 것을 확인할 수 있다. 
+이는 how='outer' （외부 조인(outer join)）의 결과다. left_on='col1', right_on='col3'으로 기준 열을 지정해야 하며, how='outer'를 사용해야 양쪽 모두의 행이 보존된다. 
+how='inner'라면 col1과 col3에 공통된 값(x, y)만 남아 z와 w 행이 사라진다。
+```
+
+
+
+### 🎉 수고하셨습니다.

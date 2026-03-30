@@ -287,6 +287,9 @@ plt.show()
 # 2️⃣ 수행 인증
 
 <!-- 교재에서 안내된 과정을 직접 실행해본 뒤, 진행 결과가 보이도록 3장 이상의 스크린샷을 캡처하여 아래에 첨부해주세요.-->
+<img width="1253" height="648" alt="image" src="https://github.com/user-attachments/assets/30d0f65e-321b-4adc-bc09-2176a12612fd" />
+<img width="1096" height="661" alt="image" src="https://github.com/user-attachments/assets/42fdb65a-c104-4271-86c7-e8177b2555d6" />
+<img width="917" height="667" alt="image" src="https://github.com/user-attachments/assets/151a9c0d-0498-4d83-a5d0-929ac90dcb14" />
 
 
 
@@ -301,8 +304,7 @@ plt.show()
 작업은 코랩에서 진행한 뒤, 코랩 링크를 아래에 첨부해주세요.**
 
 ```
-여기에 코랩 링크를 첨부해주세요!
-(제출 전, 코랩의 공유 설정을 '링크가 있는 모든 사용자가 보기 가능'으로 변경했는지 반드시 확인해주세요.)
+https://colab.research.google.com/drive/1dQCm5weNcladqPcoKtL-9dSzcFGmnfBK?usp=sharing
 ```
 
 

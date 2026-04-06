@@ -38,6 +38,78 @@ https://www.youtube.com/watch?v=deYY4xHsI0o&list=PLVsNizTWUw7FGzSRCkQrPEEe-ljVXg
 
 ## 01. 맷플롯립 기본 요소 알아보기
 
+# 1️⃣ 개념 정리 
+
+## 01. 맷플롯립 기본 요소 알아보기
+
+### Figure 객체
+- 맷플롯립의 모든 그래프 구성 요소를 담고 있는 **최상위 객체**
+- `scatter()` 같은 함수를 호출하면 자동 생성되고, `plt.show()` 이후 소멸
+- `plt.figure()` 로 명시적으로 생성하면 다양한 옵션 제어 가능
+```python
+plt.figure(figsize=(9, 6))  # 너비 9인치, 높이 6인치
+```
+
+- `figsize` 단위는 **인치(inch)**
+- 픽셀 크기로 지정하고 싶다면 → `픽셀 값 ÷ DPI`
+```python
+plt.figure(figsize=(900/72, 600/72))  # 기본 DPI=72 기준
+```
+
+### DPI
+- **dot per inch**: 1인치를 몇 개의 픽셀로 표현하는지 나타내는 단위
+- `figsize`는 캔버스 크기, `dpi`는 해상도(돋보기) 역할
+- DPI를 높이면 그래프 자체와 내부 구성 요소(축 숫자, 마커 등)가 모두 커짐
+```python
+plt.figure(dpi=144)  # 기본값 72의 2배
+```
+
+### rcParams 객체
+- 맷플롯립 **전역 기본값**을 관리하는 객체
+- 값을 바꾸면 이후 그려지는 **모든 그래프에 적용**됨
+```python
+plt.rcParams['figure.dpi'] = 100          # DPI 기본값 변경
+plt.rcParams['scatter.marker'] = '*'      # 마커 기본값을 별 모양으로 변경
+```
+
+- 특정 그래프 하나만 바꾸려면 함수의 매개변수를 직접 사용
+```python
+plt.scatter(..., marker='+')  # rcParams 기본값 무시하고 이 그래프만 적용
+```
+
+### 마커(Marker)
+- 그래프에서 데이터 포인트를 표시하는 방식
+- 기본값: `'o'` (동그라미)
+- 변경 방법: `rcParams['scatter.marker']` 또는 `scatter()` 함수의 `marker` 매개변수
+
+### 서브플롯(Subplot)
+- 하나의 Figure 안에 여러 개의 그래프 영역(Axes 객체)을 배치하는 것
+- `plt.subplots(행, 열)` 로 생성
+```python
+fig, axs = plt.subplots(2, figsize=(6, 8))   # 세로로 2개
+fig, axs = plt.subplots(1, 2, figsize=(10, 4))  # 가로로 2개
+```
+
+- 각 서브플롯에서 사용 가능한 주요 메서드:
+
+| 메서드 | 기능 |
+|---|---|
+| `axs[i].set_title()` | 서브플롯 제목 설정 |
+| `axs[i].set_xlabel()` | x축 이름 설정 |
+| `axs[i].set_ylabel()` | y축 이름 설정 |
+| `axs[i].set_yscale('log')` | y축 로그 스케일 설정 |
+
+### 맷플롯립 그래프 구성 요소 정리
+- **Figure**: 전체 그래프를 담는 최상위 컨테이너
+- **Axes(서브플롯)**: 실제 그래프가 그려지는 영역
+- **Axis**: x축 / y축 (눈금, 레이블 포함)
+- **마커**: 데이터 포인트 표시 방식
+- **레이블**: 축 이름
+
+---
+
+## 02. 선 그래프와 막대 그래프 그리기
+
 <!-- 새롭게 배운 내용을 자유롭게 정리해주세요.-->
 
 ## 02. 선 그래프와 막대 그래프 그리기

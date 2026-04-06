@@ -38,10 +38,6 @@ https://www.youtube.com/watch?v=deYY4xHsI0o&list=PLVsNizTWUw7FGzSRCkQrPEEe-ljVXg
 
 ## 01. 맷플롯립 기본 요소 알아보기
 
-# 1️⃣ 개념 정리 
-
-## 01. 맷플롯립 기본 요소 알아보기
-
 ### Figure 객체
 - 맷플롯립의 모든 그래프 구성 요소를 담고 있는 **최상위 객체**
 - `scatter()` 같은 함수를 호출하면 자동 생성되고, `plt.show()` 이후 소멸
@@ -110,16 +106,141 @@ fig, axs = plt.subplots(1, 2, figsize=(10, 4))  # 가로로 2개
 
 ## 02. 선 그래프와 막대 그래프 그리기
 
-<!-- 새롭게 배운 내용을 자유롭게 정리해주세요.-->
+### 선 그래프 (Line Graph)
+- 데이터 포인트 사이를 **선으로 이은** 그래프
+- 한 축을 따라 데이터의 **변화 추이**를 보는 데 적합 (예: 연도별 발행 도서 수)
+- `plt.plot()` 함수로 그림
+```python
+plt.plot(count_by_year.index, count_by_year.values)
+# 또는 시리즈 객체를 바로 넘겨도 됨 → 자동으로 인덱스를 x축으로 사용
+plt.plot(count_by_year)
 
-## 02. 선 그래프와 막대 그래프 그리기
+plt.title('Books by year')   # 제목
+plt.xlabel('year')           # x축 이름
+plt.ylabel('number of books')  # y축 이름
+plt.show()
+```
 
-<!-- 새롭게 배운 내용을 자유롭게 정리해주세요.-->
+#### 선 스타일 / 마커 / 색상 옵션
+
+| 매개변수 | 옵션 | 설명 |
+|---|---|---|
+| `linestyle` | `'-'` | 실선 (기본값) |
+| | `':'` | 점선 |
+| | `'-.'` | 쇄선 |
+| | `'--'` | 파선 |
+| `color` | `'red'`, `'#ff0000'` 등 | 선 색상 |
+| `marker` | `'.'`, `'*'`, `'+'` 등 | 데이터 포인트 마커 |
+```python
+plt.plot(count_by_year, marker='.', linestyle=':', color='red')
+# 단축 표현도 가능
+plt.plot(count_by_year, '*-g')  # 별 마커, 실선, 초록색
+```
+
+#### 눈금(tick) 설정
+- x축 눈금은 `xticks()`, y축 눈금은 `yticks()`
+```python
+plt.xticks(range(1947, 2030, 10))  # 10년 단위로 눈금 표시
+```
+
+#### 그래프에 텍스트 표시: `annotate()`
+```python
+plt.annotate(val, (idx, val))  # 기본: 마커와 같은 좌표 기준
+
+# 텍스트 위치 조절
+plt.annotate(val, (idx, val), xytext=(2, 2), textcoords='offset points')
+# offset points: 포인트 단위 상대 위치 (1pt = 1/72인치)
+# offset pixels: 픽셀 단위 상대 위치
+```
+
+> y축 스케일이 x축보다 훨씬 클 경우, 절대 좌표로 거리를 지정하면 효과가 거의 없음 → `offset points` 사용 권장
+
+---
+
+### 막대 그래프 (Bar Graph)
+- 데이터 포인트의 크기를 **막대 높이**로 나타내는 그래프
+- x축: 연속적이지 않은 **범주형** 데이터 (예: 주제분류번호)
+- `plt.bar()` 함수로 그림
+```python
+plt.bar(count_by_subject.index, count_by_subject.values)
+plt.title('Books by subject')
+plt.xlabel('subject')
+plt.ylabel('number of books')
+plt.show()
+```
+
+#### 막대 스타일 옵션
+
+| 매개변수 | 설명 |
+|---|---|
+| `width` | 막대 두께 (기본값 0.8, 1이면 간격 없음) |
+| `color` | 막대 색상 |
+
+#### annotate() 텍스트 정렬 옵션 (막대 그래프)
+```python
+plt.annotate(val, (idx, val),
+             xytext=(0, 2), textcoords='offset points',
+             fontsize=8, ha='center', color='green')
+```
+
+- `ha`: 수평 정렬 (`'center'`, `'left'`, `'right'`(기본))
+
+---
+
+### 가로 막대 그래프
+- `plt.barh()` 함수 사용
+- `width` → `height` 매개변수로 두께 조절
+- x축과 y축 이름을 **바꿔서** 지정
+- `annotate()` 좌표도 `(idx, val)` → `(val, idx)` 로 바꿔야 함
+- 수직 정렬: `va` 매개변수 사용 (`'center'`, `'top'`, `'bottom'`, `'baseline'`(기본))
+```python
+plt.barh(count_by_subject.index, count_by_subject.values, height=0.7, color='blue')
+plt.xlabel('number of books')
+plt.ylabel('subject')
+for idx, val in count_by_subject.items():
+    plt.annotate(val, (val, idx), xytext=(2, 0), textcoords='offset points',
+                 fontsize=8, va='center', color='green')
+plt.show()
+```
+
+---
+
+### 이미지 출력 및 저장
+```python
+# 이미지 읽기 → 넘파이 배열 반환 (높이, 너비, 채널)
+img = plt.imread('jupiter.png')
+
+# 이미지 화면에 출력
+plt.imshow(img)
+plt.axis('off')   # 축과 눈금 숨기기
+plt.show()
+
+# 넘파이 배열을 이미지 파일로 저장
+plt.imsave('jupiter.jpg', arr_img)  # 확장자로 포맷 자동 변환
+
+# 그래프를 이미지로 저장 (show() 이전에 호출해야 함!)
+plt.savefig('books_by_subject.png')
+plt.show()
+```
+
+> `savefig()`의 DPI를 높게 설정하면 인쇄용 고해상도 이미지 생성 가능
+
+---
+
+### 데이터 전처리 포인트 (이번 절 실습 기준)
+- `value_counts()`: 고유값의 등장 횟수 계산
+- `sort_index()`: 인덱스 기준 오름차순 정렬 (선 그래프 x축이 날짜일 때 필수)
+- 인덱스 필터링: `series[series.index <= 2030]` 처럼 부등호로 이상값 제거
+- 명목형 데이터(순서 무의미) vs 순서형 데이터(순서 의미 있음) — 막대 그래프는 정렬 불필요할 수도 있음
 
 
 # 2️⃣ 수행 인증
 
 <!-- 교재에서 안내된 과정을 직접 실행해본 뒤, 진행 결과가 보이도록 4~6장의 스크린샷을 캡처하여 아래에 첨부해주세요.-->
+<img width="1310" height="736" alt="image" src="https://github.com/user-attachments/assets/65a632a9-e257-4b32-b8de-1c115262bfd6" />
+<img width="1181" height="842" alt="image" src="https://github.com/user-attachments/assets/dc567ed5-f051-4a1c-b812-6a8fe7e303ea" />
+<img width="1202" height="785" alt="image" src="https://github.com/user-attachments/assets/49353748-6b05-4f72-8aca-08ca7bea4d22" />
+<img width="1200" height="830" alt="image" src="https://github.com/user-attachments/assets/9a7bf520-4aed-4548-838c-df562664ec2b" />
 
 
 
@@ -142,7 +263,16 @@ fig, axs = plt.subplots(1, 2, figsize=(10, 4))  # 가로로 2개
 ```
 
 ```
-여기에 코드를 작성해주세요!
+import matplotlib.pyplot as plt
+
+x = [1, 2, 3, 4, 5]
+y = [2, 4, 6, 8, 10]
+
+plt.plot(x, y, marker='o')
+plt.title('Linear Trend')
+plt.xlabel('X values')
+plt.ylabel('Y values')
+plt.show()
 ```
 
 
